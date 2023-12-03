@@ -1,0 +1,16 @@
+FROM python:slim
+FROM nginx
+
+COPY --from=0 /usr/local/bin /usr/local/bin
+COPY --from=0 /usr/local/lib /usr/local/lib
+
+COPY ./python/NginxCheck /app//NginxCheck
+COPY ./default_base.conf.template /etc/nginx/templates/default.conf.template
+
+ENV INPUT_SOCKET "/sockets/input/nginx.sock"
+ENV OUTPUT_SOCKET "/sockets/output/nginx.sock"
+ENV BASE_PASS "/count"
+
+COPY ./python/app_base.py /app/app.py
+
+CMD ["python", "-u", "/app/app.py"]

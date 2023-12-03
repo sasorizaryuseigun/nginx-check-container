@@ -1,0 +1,19 @@
+include includes/setup.conf;
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
+server {
+    listen unix:${INPUT_SOCKET};
+
+    set $upstream http://unix:${OUTPUT_SOCKET};
+
+    include includes/502to444.conf;
+
+    location / {
+        include includes/proxy_backend.conf;
+        proxy_pass $upstream;
+    }
+}
