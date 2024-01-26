@@ -84,8 +84,7 @@ class NginxCheck:
         now: float = float(time.time())
         """今の時間"""
 
-        wait = now / 3600
-        wait = 3600 - (wait - int(wait))
+        wait = 3600 - (now % 3600)
         time.sleep(wait)
         self._timeTasks()
         subprocess.Popen(
